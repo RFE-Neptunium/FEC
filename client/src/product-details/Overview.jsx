@@ -9,7 +9,7 @@ import AddToCart from './AddToCart';
 import ProductDetails from './ProductDetails';
 import StyleSelector from './StyleSelector';
 
-const Overview = forwardRef(({ ratingsRef }, ref) => {
+const Overview = forwardRef((props, /* { ratingsRef }, */ ref) => {
   // STATE
   const [product, setProduct] = useState({});
   const [styles, setStyles] = useState({});
@@ -24,38 +24,43 @@ const Overview = forwardRef(({ ratingsRef }, ref) => {
   const [range, setRange] = useState([]);
 
   // API INTERACTION
+  const url = 'http://localhost:3000';
   const productId = useCurrentProductContext();
-  const productUrl = `${process.env.API_URL}/products/${productId}`;
+  const productUrl = `${url}/products/${productId}`;
   const productStylesUrl = `${productUrl}/styles`;
-  const productReviewsUrl = `${process.env.API_URL}/reviews/meta?product_id=${productId}`;
+  // const productReviewsUrl = `${url}/reviews/meta?product_id=${productId}`;
 
   const requestConfig1 = {
     method: 'GET',
     url: productUrl,
-    headers: {
+    /* headers: {
       Authorization: process.env.AUTH_KEY,
-    },
+    }, */
   };
 
   const requestConfig2 = {
     method: 'GET',
     url: productStylesUrl,
-    headers: {
+    /* headers: {
       Authorization: process.env.AUTH_KEY,
-    },
+    }, */
   };
 
-  const requestConfig3 = {
+  /* const requestConfig3 = {
     method: 'GET',
     url: productReviewsUrl,
     headers: {
       Authorization: process.env.AUTH_KEY,
     },
-  };
+  }; */
 
   function getProduct() {
     axios(requestConfig1)
-      .then((result) => setProduct(result.data))
+      .then((result) => {
+        // console.log(result.data);
+        // console.log(result.data);
+        setProduct(result.data);
+      })
       .catch((err) => {
         console.log('failed fetching product from API.', err);
       });
@@ -64,14 +69,15 @@ const Overview = forwardRef(({ ratingsRef }, ref) => {
   function getStyles() {
     axios(requestConfig2)
       .then((result) => {
-        setStyles(result.data.results);
+        // console.log(result.data);
+        setStyles(result.data);
       })
       .catch((err) => {
         console.log('failed fetching product styles from API.', err);
       });
   }
 
-  function getReviews() {
+  /* function getReviews() {
     axios(requestConfig3)
       .then((result) => {
         setProductReviews(result.data);
@@ -79,17 +85,28 @@ const Overview = forwardRef(({ ratingsRef }, ref) => {
       .catch((err) => {
         console.log('failed fetching product reviews from API.', err);
       });
-  }
+  } */
 
   // SET STATE
   useEffect(() => {
     getProduct();
     getStyles();
-    getReviews();
+    /* getReviews(); */
   }, [productId]);
   useEffect(() => {
-    if (styles.length > 0) {
-      setCurrentStyle(styles[0]);
+    if (Object.keys(styles).length > 0) {
+      let styleId = styles.styles[0].id;
+      let photos = styles.photos.filter(photo => {
+        if (photo.styleId === styleId) {
+          return photo;
+        }
+      });
+      let skus = styles.photos.filter(sku => {
+        if (sku.styleId === styleId) {
+          return sku;
+        }
+      });
+      setCurrentStyle({ style: styles.styles[0], photos: photos, skus: skus });
     }
   }, [styles]);
   useEffect(() => {
@@ -127,12 +144,15 @@ const Overview = forwardRef(({ ratingsRef }, ref) => {
   });
 
   // RENDER
-  if (Object.keys(currentStyle).length > 0 && Object.keys(productReviews).length > 0 && currentThumbnail.length > 0 && range.length > 0) {
+
+  if (Object.keys(currentStyle).length > 0 /* && Object.keys(productReviews).length > 0 */ && currentThumbnail.length > 0 && range.length > 0) {
+    console.log('style', currentStyle);
+    console.log('product', product);
     return (
       <div className="overview" ref={ref}>
         <ImageGallery currentStyle={currentStyle} currentThumbnail={currentThumbnail} setCurrentThumbnail={setCurrentThumbnail} modal={modal} setModal={setModal} zoom={zoom} setZoom={setZoom} modalZoom={modalZoom} setModalZoom={setModalZoom} range={range} setRange={setRange} />
         <div className="right">
-          <ProductDetails product={product} currentStyle={currentStyle} productReviews={productReviews} ratingsRef={ratingsRef} />
+          <ProductDetails product={product} currentStyle={currentStyle} /* productReviews={productReviews} ratingsRef={ratingsRef} */ />
           <StyleSelector styles={styles} currentStyle={currentStyle} setCurrentStyle={setCurrentStyle} currentThumbnail={currentThumbnail} />
           <AddToCart currentStyle={currentStyle} currentSize={currentSize} setCurrentSize={setCurrentSize} sizeAlert={sizeAlert} setSizeAlert={setSizeAlert} />
         </div>

@@ -21,12 +21,13 @@ const RelatedItems = forwardRef((props, ref) => {
   // Context
   //  TODO: Change default state
   //  Will need to be able to show more than the default and update accordingly
+  const url = 'http://localhost:3000';
   const getStylesArr = (ids) => {
     const promises = [];
     for (let i = 0; i < ids.length; i++) {
       const config = {
         method: 'get',
-        url: `${process.env.API_URL}/products/${ids[i]}/styles`,
+        url: `${url}/products/${ids[i]}/styles`,
         headers: {
           Authorization: process.env.AUTH_KEY, // TODO: Get rid of this when env is set up!!
         },
@@ -58,7 +59,7 @@ const RelatedItems = forwardRef((props, ref) => {
     for (let i = 0; i < ids.length; i++) {
       const config = {
         method: 'get',
-        url: `${process.env.API_URL}/products/${ids[i]}`,
+        url: `${url}/products/${ids[i]}`,
         headers: {
           Authorization: process.env.AUTH_KEY, // TODO: Get rid of this when env is set up!!
         },
@@ -73,7 +74,7 @@ const RelatedItems = forwardRef((props, ref) => {
       .catch((err) => console.log('Error:', err));
   };
 
-  const getReviewsArr = (ids) => {
+  /* const getReviewsArr = (ids) => {
     const promises = [];
     for (let i = 0; i < ids.length; i++) {
       const config = {
@@ -97,7 +98,7 @@ const RelatedItems = forwardRef((props, ref) => {
         return prodObjArr.map((product) => product.data);
       })
       .catch((err) => console.log('Error:', err));
-  };
+  }; */
 
   //  relying on the order may introduce a bug
   // const cardFormatter = (reviews, ids, styles) => {
@@ -128,19 +129,19 @@ const RelatedItems = forwardRef((props, ref) => {
   const setOverviewDataState = (id) => {
     const configId = {
       method: 'get',
-      url: `${process.env.API_URL}/products/${id}`,
-      headers: {
+      url: `${url}/products/${id}`,
+      /* headers: {
         Authorization: process.env.AUTH_KEY,
-      },
+      }, */
     };
     const configStyle = {
       method: 'get',
-      url: `${process.env.API_URL}/products/${id}/styles`,
-      headers: {
+      url: `${url}/products/${id}/styles`,
+      /* headers: {
         Authorization: process.env.AUTH_KEY,
-      },
+      }, */
     };
-    const configReview = {
+    /* const configReview = {
       method: 'get',
       url: `${process.env.API_URL}/reviews`,
       params: {
@@ -150,15 +151,15 @@ const RelatedItems = forwardRef((props, ref) => {
       headers: {
         Authorization: process.env.AUTH_KEY, // TODO: Get rid of this when env is set up!!
       },
-    };
+    }; */
 
     axios
-      .all([axios(configStyle), axios(configReview), axios(configId)])
+      .all([axios(configStyle), /*axios(configReview),*/ axios(configId)])
       .then(
         axios.spread((...responses) => {
           responses[0].data.results = responses[0].data.results.filter((style) => style['default?'] === true);
           setCurrentProductStyles(responses[0].data);
-          setCurrentProductReviews(responses[1].data);
+          /* setCurrentProductReviews(responses[1].data); */
           setCurrentProductData(responses[2].data);
         }),
       )
@@ -170,23 +171,23 @@ const RelatedItems = forwardRef((props, ref) => {
   const getProductIds = () => {
     const config = {
       method: 'get',
-      url: `${process.env.API_URL}/products/${currentProduct}/related`,
-      headers: {
+      url: `${url}/products/${currentProduct}/related`,
+     /* headers: {
         Authorization: process.env.AUTH_KEY, // TODO: Get rid of this when env is set up!!
-      },
+      },*/
     };
     axios(config)
       .then((response) => {
         return Promise.all([
           getStylesArr(response.data),
           get_idsArr(response.data),
-          getReviewsArr(response.data),
+          /* getReviewsArr(response.data), */
         ]);
       })
       .then((promiseArr) => {
         setRelatedProductStyles(promiseArr[0]);
         setRelatedProduct_ids(promiseArr[1]);
-        setRelatedProductReviews(promiseArr[2]);
+        /* setRelatedProductReviews(promiseArr[2]); */
       })
       .catch((error) => {
         console.log(error);
@@ -203,7 +204,7 @@ const RelatedItems = forwardRef((props, ref) => {
         <ProductList
           relatedProductStyles={relatedProductStyles}
           relatedProduct_ids={relatedProduct_ids}
-          relatedProductReviews={relatedProductReviews}
+         /*  relatedProductReviews={relatedProductReviews} */
         />
         <div className="main-widget-title">YOUR OUTFITS</div>
         <OutfitList

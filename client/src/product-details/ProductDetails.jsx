@@ -7,11 +7,11 @@
 import React, { useState } from 'react';
 // import { ShareSocial } from 'react-share-social';
 import { FacebookShareButton, FacebookIcon, PinterestShareButton, PinterestIcon, TwitterShareButton, TwitterIcon } from 'react-share';
-import Star from '../RatingsReviews/Ratings/Star';
+/* import Star from '../RatingsReviews/Ratings/Star'; */
 import priceFormat from '../TopBar/lib/priceFormat';
 
-function ProductDetails({ product, currentStyle, productReviews, ratingsRef }) {
-  if (Object.keys(productReviews.ratings).length > 0) {
+function ProductDetails({ product, currentStyle, /* productReviews, ratingsRef */}) {
+  /* if (Object.keys(productReviews.ratings).length > 0) {
     const [showNav, setShowNav] = useState(false);
 
     const toggleNav = (event) => {
@@ -91,18 +91,18 @@ function ProductDetails({ product, currentStyle, productReviews, ratingsRef }) {
         </PinterestShareButton>
       </div>
     );
-  }
+  } */
 
   if (currentStyle.sales_price) {
     return (
       <div className="productDetails">
-        <p id="category">{product.category}</p>
-        <h1 id="title">{product.name}</h1>
+        <p id="category">{product.product.category}</p>
+        <h1 id="title">{product.product.name}</h1>
         <div className="saleOutlay">
-          <h3 id="nonPrice">{'$' + currentStyle.original_price}</h3>
-          <h3 id="salesPrice">{currentStyle.sales_price}</h3>
+          <h3 id="nonPrice">{'$' + currentStyle.style.original_price}</h3>
+          <h3 id="salesPrice">{currentStyle.style.sales_price}</h3>
         </div>
-        <p id="overview">{product.description}</p>
+        <p id="overview">{product.product.description}</p>
         <FacebookShareButton url={window.location.href} className="share">
           <FacebookIcon className="share" />
         </FacebookShareButton>
@@ -118,10 +118,10 @@ function ProductDetails({ product, currentStyle, productReviews, ratingsRef }) {
 
   return (
     <div className="productDetails">
-      <p id="category">{product.category}</p>
-      <h1 id="title">{product.name}</h1>
-      <h3 id="price">{'$' + currentStyle.original_price}</h3>
-      <p id="overview">{product.description}</p>
+      <p id="category">{product.product.category}</p>
+      <h1 id="title">{product.product.name}</h1>
+      <h3 id="price">{'$' + currentStyle.style.original_price}</h3>
+      <p id="overview">{product.product.description}</p>
       <FacebookShareButton url={window.location.href} className="share">
         <FacebookIcon className="share" />
       </FacebookShareButton>

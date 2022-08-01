@@ -11,7 +11,7 @@ export function useCurrentProductUpdate(obj) {
   return useContext(UpdateCurrentProductContext);
 }
 export function CurrentProductProvider({ children }) {
-  const [currentProduct, setCurrentProduct] = useState('37314');
+  const [currentProduct, setCurrentProduct] = useState('1');
 
   function changeCurrentProduct(newProduct) {
     setCurrentProduct(newProduct);

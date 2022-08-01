@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 // mongoose.set('debug', true);
 
 const { Schema } = mongoose;
@@ -8,7 +9,7 @@ mongoose
   .then(mongoose
     .connect('mongodb://localhost:27017/Products')
     .then(console.log('Connected to MongoDB...'))
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err)),
   )
   .catch((err) => console.log(err))
 
@@ -59,44 +60,39 @@ const StylesSchema = new Schema({
 
 const Features = mongoose.model('Features', FeaturesSchema);
 const Photos = mongoose.model('Photos', PhotosSchema);
-const Product = mongoose.model('Product', ProductSchema);
+const Product = mongoose.model('Product', ProductSchema, 'product');
 const RelatedProducts = mongoose.model('RelatedProducts', RelatedProductsSchema);
 const Skus = mongoose.model('Skus', SkusSchema);
 const Styles = mongoose.model('Styles', StylesSchema);
 
 const getItems = (callback) => {
-
   Product.find().limit(10)
     .then(results => {
       callback(null, results)
     })
     .catch(err => callback(err));
-
 };
 
 const getItemByProductId = (product_id, callback) => {
-
+  console.log(product_id);
   Product
-    .findOne({ "id": product_id })
+    .findOne({ 'id': product_id })
     .then((product) => {
       Features
-        .find({ "product_id": product_id })
+        .find({ 'product_id': product_id })
         .then((features) => {
-          product.features = features;
-          callback(null, product);
+          callback(null, {product: product, features: features});
         })
         .catch(err => callback(err));
     })
     .catch(err => callback(err));
-
 };
 
 const getStylesByProductId = (product_id, callback) => {
-
   // Styles.findOne().then((res) => console.log(res));
 
   Styles
-    .find({ "productId": product_id })
+    .find({ productId: product_id })
     .then((styles) => {
       let ids = [];
       styles.forEach(style => ids.push(style.id));
@@ -113,26 +109,22 @@ const getStylesByProductId = (product_id, callback) => {
             .catch(err => callback(err));
         })
         .catch(err => callback(err));
-
     })
     .catch(err => callback(err));
-
 };
 
 const getRelatedItemsByProductId = (product_id, callback) => {
-
   RelatedProducts
-    .find({ "current_product_id": product_id })
+    .find({ current_product_id: product_id })
     .then((related) => {
       callback(null, related);
     })
     .catch(err => callback(err));
-
 };
 
 module.exports = {
   getItems,
   getItemByProductId,
   getStylesByProductId,
-  getRelatedItemsByProductId
+  getRelatedItemsByProductId,
 }

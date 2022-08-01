@@ -11,15 +11,15 @@ import { CurrentProductProvider } from './context';
 import { QuestionListProvider } from './QuestionsAnswers/contexts/QuestionListContext';
 
 function App() {
-  const ratingsRef = useRef();
+ /* const ratingsRef = useRef();
   const topRef = useRef();
-  const qaRef = useRef();
+  const qaRef = useRef(); */
   const pdRef = useRef();
-  const riRef = useRef();
-  const refs = [ratingsRef, topRef, qaRef, pdRef, riRef];
-  const [clicks, setClicks] = useState([]);
+  //const riRef = useRef();
+  const refs = [/*ratingsRef, topRef, qaRef,*/ pdRef/*, riRef*/];
+  //const [clicks, setClicks] = useState([]);
 
-  const sendInteraction = (click) => {
+  /*const sendInteraction = (click) => {
     axios.post(`${process.env.API_URL}/interactions`, click, {
       headers: {
         Authorization: process.env.AUTH_KEY,
@@ -36,7 +36,7 @@ function App() {
       for (let i = 0; i < refs.length; i++) {
         const currentRef = refs[i];
         if (currentRef.current.contains(event.target)
-        || event.target === currentRef.current) {
+          || event.target === currentRef.current) {
           const clickBody = {
             widget: currentRef.current.id,
             time: new Date().toLocaleString(),
@@ -49,23 +49,24 @@ function App() {
         }
       }
     };
-  }, []);
+  }, []);*/
 
   return (
     <MainDiv>
       <CurrentProductProvider>
-        <TopBar ratingsRef={ratingsRef} ref={topRef} qaRef={qaRef} pdRef={pdRef} riRef={riRef} />
-        <Overview ratingsRef={ratingsRef} ref={pdRef} />
-        <RelatedItems ref={riRef} />
-        <QuestionListProvider>
-          <QuestionsAnswers ref={qaRef} />
-        </QuestionListProvider>
-        <RatingsReviews ref={ratingsRef} />
-        <BotBar />
+        <Overview /*ratingsRef={ratingsRef}*/ ref={pdRef} />
       </CurrentProductProvider>
     </MainDiv>
   );
 }
+
+/*
+<TopBar ratingsRef={ratingsRef} ref={topRef} qaRef={qaRef} pdRef={pdRef} riRef={riRef} /> <QuestionListProvider>
+<RelatedItems ref={riRef} />
+          <QuestionsAnswers ref={qaRef} />
+        </QuestionListProvider>
+        <RatingsReviews ref={ratingsRef} />
+        <BotBar /> */
 
 const MainDiv = styled.div`
   width: 100%;
