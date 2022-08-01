@@ -61,4 +61,6 @@ module.exports = {
       '.js', '.json', '.jsx',
     ],
   },
+  target: 'web',
+  externals: /k6(\/.*)?/,
 };
