@@ -5,6 +5,7 @@ const compression = require('compression');
 // require('dotenv').config();
 const port = 3000;
 const db = require('./db');
+let { product } = require('./cache/products');
 const { products } = require('./cache/products');
 const { styles } = require('./cache/styles');
 const { related } = require('./cache/related');
@@ -15,14 +16,19 @@ app.use(compression());
 app.use(express.static(path.join(__dirname, '../client/public')));
 
 app.get('/products', (req, res) => {
-  db.getItems((err, data) => {
-    if (err) {
-      console.log(err);
-      res.sendStatus(500);
-    } else {
-      res.status(200).send(data);
-    }
-  });
+  if (product) {
+    res.status(200).send(product);
+  } else {
+    db.getItems((err, data) => {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        product = data;
+        res.status(200).send(data);
+      }
+    });
+  }
 });
 
 app.get('/products/:product_id', (req, res) => {

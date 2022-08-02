@@ -1,10 +1,10 @@
+/* eslint-disable radix */
 /* eslint-disable max-len */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Overview from './product-details/Overview';
 import TopBar from './TopBar/TopBar';
 import BotBar from './TopBar/BotBar';
-// import { CurrentProductProvider } from './context';
 
 function App() {
   const [productId, setProductId] = useState({});

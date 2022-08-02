@@ -12,7 +12,7 @@ function SearchThing({ toggleSearch, handleNewProductClick }) {
   const [isPending, startTransition] = useTransition();
 
   const getProducts = () => {
-    axios.get('http://localhost:3000/products', { // max 1011, but just get 100 for now
+    axios.get('http://localhost:3000/products', {
       /* headers: {
         Authorization: process.env.AUTH_KEY,
       }, */
