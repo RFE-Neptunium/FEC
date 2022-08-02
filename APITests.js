@@ -1,8 +1,7 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 import { Counter } from 'k6/metrics';
-import bundle from './server/bundle.js'
-
+// import index from './server/index';
 
 export const requests = new Counter('http_reqs');
 
@@ -17,7 +16,6 @@ const url = 'http://localhost:3000/products';
 const urlById = url + `/${number}`;
 const urlRelated = urlById + '/related';
 const urlStyles = urlById + '/styles';
-
 
 const productsRoute = function () {
   const res = http.get(url);
@@ -67,8 +65,8 @@ const stylesRoute = function () {
   });
 };
 
-export default function() {
-  const res = http.get(url);
+export default function () {
+  const res = http.get(urlStyles);
   sleep(1);
   check(res, {
     'is status 200': r => r.statis === 200,
@@ -77,4 +75,4 @@ export default function() {
     'transaction time < 1000ms': r => r.timings.duration < 1000,
     'transaction time < 2000ms': r => r.timings.duration < 2000,
   });
-};
+}

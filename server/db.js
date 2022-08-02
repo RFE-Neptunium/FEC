@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable camelcase */
 const mongoose = require('mongoose');
 
 // mongoose.set('debug', true);
@@ -67,59 +69,98 @@ const Styles = mongoose.model('Styles', StylesSchema);
 
 const getItems = (callback) => {
   Product.find().limit(10)
-    .then(results => {
-      callback(null, results)
+    .then((results) => {
+      callback(null, results);
     })
-    .catch(err => callback(err));
+    .catch((err) => callback(err));
 };
 
 const getItemByProductId = (product_id, callback) => {
-  console.log(product_id);
   Product
-    .findOne({ 'id': product_id })
+    .findOne({ id: product_id }, { _id: 0 })
     .then((product) => {
       Features
-        .find({ 'product_id': product_id })
+        .find({ product_id })
         .then((features) => {
-          callback(null, {product: product, features: features});
+          const data = {
+            id: product.id,
+            name: product.name,
+            slogan: product.slogan,
+            description: product.description,
+            category: product.category,
+            default_price: product.default_price,
+            features: [],
+          };
+          features.forEach((feature) => {
+            data.features.push({ feature: feature.feature, value: feature.value });
+          });
+
+          callback(null, data);
         })
-        .catch(err => callback(err));
+        .catch((err) => callback(err));
     })
-    .catch(err => callback(err));
+    .catch((err) => callback(err));
 };
 
-const getStylesByProductId = (product_id, callback) => {
-  // Styles.findOne().then((res) => console.log(res));
-
+const getStylesByProductId = (productId, callback) => {
   Styles
-    .find({ productId: product_id })
+    .find({ productId })
     .then((styles) => {
-      let ids = [];
-      styles.forEach(style => ids.push(style.id));
-      ids.sort();
-      console.log(ids);
+      const ids = [];
+      styles.forEach((style) => {
+        ids.push(style.id);
+      });
       Photos
         .find({ styleId: { $in: ids } })
         .then((photos) => {
           Skus
             .find({ styleId: { $in: ids } })
-            .then(skus => {
-              callback(null, styles, photos, skus);
+            .then((skus) => {
+              const styleList = [];
+              styles.forEach((style) => {
+                const styleObj = {
+                  id: style.id,
+                  name: style.name,
+                  sale_price: style.sale_price,
+                  original_price: style.original_price,
+                  photos: [],
+                  skus: [],
+                };
+                photos.forEach((photo) => {
+                  if (photo.styleId === styleObj.id) {
+                    styleObj.photos.push({ url: photo.url, thumbnail_url: photo.thumbnail_url });
+                  }
+                });
+                skus.forEach((sku) => {
+                  if (sku.styleId === styleObj.id) {
+                    styleObj.skus.push({ size: sku.size, quantity: sku.quantity });
+                  }
+                });
+                styleList.push(styleObj);
+              });
+
+              callback(null, styleList);
             })
-            .catch(err => callback(err));
+            .catch((err) => callback(err));
         })
-        .catch(err => callback(err));
+        .catch((err) => callback(err));
     })
-    .catch(err => callback(err));
+    .catch((err) => callback(err));
 };
 
-const getRelatedItemsByProductId = (product_id, callback) => {
+const getRelatedItemsByProductId = (current_product_id, callback) => {
   RelatedProducts
-    .find({ current_product_id: product_id })
+    .find({ current_product_id })
     .then((related) => {
-      callback(null, related);
+      const relatedList = [];
+      related.forEach((item) => {
+        relatedList.push(item.related_product_id);
+      });
+      relatedList.sort();
+
+      callback(null, relatedList);
     })
-    .catch(err => callback(err));
+    .catch((err) => callback(err));
 };
 
 module.exports = {

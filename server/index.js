@@ -5,6 +5,9 @@ const compression = require('compression');
 // require('dotenv').config();
 const port = 3000;
 const db = require('./db');
+const { products } = require('./cache/products');
+const { styles } = require('./cache/styles');
+const { related } = require('./cache/related');
 
 const app = express();
 app.use(compression());
@@ -23,37 +26,51 @@ app.get('/products', (req, res) => {
 });
 
 app.get('/products/:product_id', (req, res) => {
-  db.getItemByProductId(req.params.product_id, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.sendStatus(500);
-    } else {
-      res.status(200).send(data);
-    }
-  });
+  if (products[req.params.product_id]) {
+    res.status(200).send(products[req.params.product_id]);
+  } else {
+    db.getItemByProductId(req.params.product_id, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        products[req.params.product_id] = data;
+        res.status(200).send(data);
+      }
+    });
+  }
 });
 
 app.get('/products/:product_id/styles', (req, res) => {
-  db.getStylesByProductId(req.params.product_id, (err, data1, data2, data3) => {
-    if (err) {
-      console.log(err);
-      res.sendStatus(500);
-    } else {
-      //console.log('data1', data1, 'data2', data2, 'data3', data3)
-      res.status(200).send({ styles: data1, photos: data2, skus: data3 });
-    }
-  });
+  if (styles[req.params.product_id]) {
+    res.status(200).send(styles[req.params.product_id]);
+  } else {
+    db.getStylesByProductId(req.params.product_id, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        styles[req.params.product_id] = data;
+        res.status(200).send(data);
+      }
+    });
+  }
 });
 
 app.get('/products/:product_id/related', (req, res) => {
-  db.getRelatedItemsByProductId(req.params.product_id, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.sendStatus(500);
-    } else {
-      res.status(200).send(data);
-    }
-  });
+  if (related[req.params.product_id]) {
+    res.status(200).send(related[req.params.product_id]);
+  } else {
+    db.getRelatedItemsByProductId(req.params.product_id, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        related[req.params.product_id] = data;
+        res.status(200).send(data);
+      }
+    });
+  }
 });
 
 app.listen(port, () => {
