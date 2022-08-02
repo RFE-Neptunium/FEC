@@ -168,4 +168,4 @@ module.exports = {
   getItemByProductId,
   getStylesByProductId,
   getRelatedItemsByProductId,
-}
+};
