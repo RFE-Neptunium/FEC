@@ -1,18 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useCurrentProductUpdate } from '../context';
 import priceFormat from './lib/priceFormat';
 
-function SearchTile({ product, toggleSearch }) {
-  const setCurrentProduct = useCurrentProductUpdate();
-
-  const handleClick = () => {
-    setCurrentProduct(product.id);
-    toggleSearch();
-  };
-
+function SearchTile({ product, handleNewProductClick }) {
   return (
-    <StyledDiv onClick={handleClick}>
+    <StyledDiv onClick={handleNewProductClick} id={product.id}>
       <div>{product.name}</div>
       <div>{priceFormat(product.default_price)}</div>
     </StyledDiv>

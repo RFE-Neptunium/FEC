@@ -2,18 +2,18 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import SearchTile from './SearchTile';
 
-function SearchList({ products, query, toggleSearch }) {
+function SearchList({ products, query, handleNewProductClick }) {
   useEffect(() => {
     console.log('search list loaded');
   }, []);
 
   return (
     <StyledList>
-      {(products.map((product, index) => (
+      {(products.map((product) => (
         <SearchTile
           product={product}
-          key={index}
-          toggleSearch={toggleSearch}
+          key={product.id}
+          handleNewProductClick={handleNewProductClick}
         />
       )))}
     </StyledList>

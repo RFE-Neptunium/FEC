@@ -14,8 +14,8 @@ function StyleSelector({
     const styleList = Object.values(styles);
     let newStyle;
     styleList.forEach((style) => {
-      if (style.style.id === parseInt(event.target.alt)) {
-        newStyle = style.style;
+      if (style.id === parseInt(event.target.alt)) {
+        newStyle = style;
       }
     });
     setCurrentStyle(newStyle);
@@ -23,25 +23,18 @@ function StyleSelector({
 
   const styleList = [];
 
-  styles.styles.forEach((style) => {
-    // console.log(style);
-    const styleId = style.id;
-    const photos = styles.photos.filter((photo) => {
-      if (photo.styleId === styleId) {
-        return photo;
-      }
-    });
-    if (style.id === currentStyle.style.id) {
+  styles.forEach((style) => {
+    if (style.id === currentStyle.id) {
       styleList.push(
         <div key={style.name} className="styleOption">
           <img src={checkmark} alt="checkmark" id="styleOverlay" />
-          <img src={photos[0].thumbnail_url} alt={styleId} onClick={handleClick} />
+          <img src={style.photos[0].thumbnail_url} alt={style.id} onClick={handleClick} />
         </div>,
       );
     } else {
       styleList.push(
         <div key={style.name} className="styleOption">
-          <img src={photos[0].thumbnail_url} alt={styleId} onClick={handleClick} />
+          <img src={style.photos[0].thumbnail_url} alt={style.id} onClick={handleClick} />
         </div>,
       );
     }
@@ -49,7 +42,7 @@ function StyleSelector({
 
   return (
     <div className="styleSelector">
-      <p className="currentStyleSelector">{currentStyle.style.name}</p>
+      <p className="currentStyleSelector">{currentStyle.name}</p>
       {styleList}
     </div>
   );

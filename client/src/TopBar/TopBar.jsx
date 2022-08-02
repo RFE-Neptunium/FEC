@@ -1,23 +1,18 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import SearchThing from './SearchThing';
-import Nav from './Nav';
 
-const TopBar = forwardRef(({ ratingsRef, qaRef, pdRef, riRef }, ref) => {
-  const [searching, setSearching] = useState(false);
-
+const TopBar = function({toggleSearch, handleNewProductClick, searching}) {
   const refresh = () => {
     window.location.reload();
   };
 
-  const toggleSearch = () => {
-    !searching ? setSearching(true) : setSearching(false);
-  };
-
   return (
-    <TitleDiv id="top-bar" ref={ref}>
+    <TitleDiv id="top-bar">
       <Div>
-        <Nav ratingsRef={ratingsRef} qaRef={qaRef} pdRef={pdRef} riRef={riRef} />
+        <Link href="https://github.com/rfe-nixos/FEC" target="_blank" rel="noopener noreferrer">
+          ABOUT
+        </Link>
       </Div>
       <Div>
         <TitleImg
@@ -27,17 +22,12 @@ const TopBar = forwardRef(({ ratingsRef, qaRef, pdRef, riRef }, ref) => {
         />
       </Div>
       <RightDiv>
-        <Div>
-          <Link href="https://github.com/rfe-nixos/FEC" target="_blank" rel="noopener noreferrer">
-            ABOUT
-          </Link>
-        </Div>
         <TitleInner onClick={toggleSearch}>SEARCH</TitleInner>
       </RightDiv>
-      {(searching) && (<SearchThing toggleSearch={toggleSearch} />)}
+      {(searching) && (<SearchThing handleNewProductClick={handleNewProductClick} />)}
     </TitleDiv>
   );
-});
+};
 
 const Div = styled.div`
   display: flex;

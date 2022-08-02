@@ -1,72 +1,44 @@
-import React, { useRef, useState, useEffect } from 'react';
+/* eslint-disable max-len */
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import RatingsReviews from './RatingsReviews/RatingsReviews';
-import QuestionsAnswers from './QuestionsAnswers/QuestionsAnswers';
-import RelatedItems from './related-items/related-items';
 import Overview from './product-details/Overview';
 import TopBar from './TopBar/TopBar';
 import BotBar from './TopBar/BotBar';
-import { CurrentProductProvider } from './context';
-import { QuestionListProvider } from './QuestionsAnswers/contexts/QuestionListContext';
+// import { CurrentProductProvider } from './context';
 
 function App() {
- /* const ratingsRef = useRef();
-  const topRef = useRef();
-  const qaRef = useRef(); */
-  const pdRef = useRef();
-  //const riRef = useRef();
-  const refs = [/*ratingsRef, topRef, qaRef,*/ pdRef/*, riRef*/];
-  //const [clicks, setClicks] = useState([]);
+  const [productId, setProductId] = useState({});
+  const [searching, setSearching] = useState(false);
+  const url = 'http://localhost:3000/products';
 
-  /*const sendInteraction = (click) => {
-    axios.post(`${process.env.API_URL}/interactions`, click, {
-      headers: {
-        Authorization: process.env.AUTH_KEY,
-      },
-    })
-      .then((res) => {
-        console.log('success posting interaction', res);
-      })
-      .catch((err) => console.log('error posting interaction', err));
+  const toggleSearch = () => {
+    if (!searching) {
+      setSearching(true);
+    } else {
+      setSearching(false);
+    }
   };
 
-  useEffect(() => {
-    window.onclick = (event) => {
-      for (let i = 0; i < refs.length; i++) {
-        const currentRef = refs[i];
-        if (currentRef.current.contains(event.target)
-          || event.target === currentRef.current) {
-          const clickBody = {
-            widget: currentRef.current.id,
-            time: new Date().toLocaleString(),
-            element: event.target.innerHTML,
-          };
-          // line below stores clicks to state, useful for debugging
-          setClicks((oldClicks) => [...oldClicks, clickBody]);
-          sendInteraction(clickBody); // sends axios post call
-          break; // no need to check the rest
-        }
-      }
-    };
-  }, []);*/
+  const handleNewProductClick = (event) => {
+    setProductId(parseInt(event.target.id));
+    toggleSearch();
+  };
 
-  return (
-    <MainDiv>
-      <CurrentProductProvider>
-        <Overview /*ratingsRef={ratingsRef}*/ ref={pdRef} />
-      </CurrentProductProvider>
-    </MainDiv>
-  );
+  if (typeof productId !== 'number') {
+    setProductId(1);
+  }
+  if (typeof productId === 'number') {
+    return (
+      <MainDiv>
+        <TopBar toggleSearch={toggleSearch} handleNewProductClick={handleNewProductClick} searching={searching} />
+        <div>
+          <Overview productId={productId} url={url} />
+        </div>
+        <BotBar />
+      </MainDiv>
+    );
+  }
 }
-
-/*
-<TopBar ratingsRef={ratingsRef} ref={topRef} qaRef={qaRef} pdRef={pdRef} riRef={riRef} /> <QuestionListProvider>
-<RelatedItems ref={riRef} />
-          <QuestionsAnswers ref={qaRef} />
-        </QuestionListProvider>
-        <RatingsReviews ref={ratingsRef} />
-        <BotBar /> */
 
 const MainDiv = styled.div`
   width: 100%;

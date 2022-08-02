@@ -1,9 +1,10 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect, useTransition } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import SearchList from './SearchList';
 
-function SearchThing({ toggleSearch }) {
+function SearchThing({ toggleSearch, handleNewProductClick }) {
   const [query, setQuery] = useState('');
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -11,13 +12,12 @@ function SearchThing({ toggleSearch }) {
   const [isPending, startTransition] = useTransition();
 
   const getProducts = () => {
-    axios.get(`${process.env.API_URL}/products?count=100`, { // max 1011, but just get 100 for now
-      headers: {
+    axios.get('http://localhost:3000/products', { // max 1011, but just get 100 for now
+      /* headers: {
         Authorization: process.env.AUTH_KEY,
-      },
+      }, */
     })
       .then((response) => {
-        console.log('successfully fetched products', response.data);
         setProducts(response.data);
       })
       .catch((err) => console.log('error fetching products', err));
@@ -62,7 +62,7 @@ function SearchThing({ toggleSearch }) {
       <StyledInner id="searchmain-inner">
         SEARCH FOR AN ITEM HERE
         <StyledInput placeholder="i.e. shoes" name="searchthing" onChange={handleChange} />
-        {(filter) && <SearchList query={filter} products={filtered} toggleSearch={toggleSearch} />}
+        {(filter) && <SearchList query={filter} products={filtered} handleNewProductClick={handleNewProductClick} />}
         <StyledButton onClick={toggleSearch}>CLOSE</StyledButton>
       </StyledInner>
     </StyledForm>

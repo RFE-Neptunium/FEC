@@ -68,7 +68,7 @@ const Skus = mongoose.model('Skus', SkusSchema);
 const Styles = mongoose.model('Styles', StylesSchema);
 
 const getItems = (callback) => {
-  Product.find().limit(10)
+  Product.find().limit(100)
     .then((results) => {
       callback(null, results);
     })

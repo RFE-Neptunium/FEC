@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
-function Nav({ ratingsRef, qaRef, pdRef, riRef }) {
+function Nav({ pdRef }) {
   const [showNav, setShowNav] = useState(false);
   const navBotRef = useRef();
 
@@ -9,33 +9,10 @@ function Nav({ ratingsRef, qaRef, pdRef, riRef }) {
     !showNav ? setShowNav(true) : setShowNav(false);
   };
 
-  const scrollDown = () => {
-    window.scrollTo({
-      top: ratingsRef.current.offsetTop, // scrolls to location of ref
-      behavior: 'smooth',
-    });
-    toggleNav();
-  };
-
-  const scrollToQa = () => {
-    window.scrollTo({
-      top: qaRef.current.offsetTop, // scrolls to location of ref
-      behavior: 'smooth',
-    });
-    toggleNav();
-  };
 
   const scrollToPd = () => {
     window.scrollTo({
       top: pdRef.current.offsetTop, // scrolls to location of ref
-      behavior: 'smooth',
-    });
-    toggleNav();
-  };
-
-  const scrollToRi = () => {
-    window.scrollTo({
-      top: riRef.current.offsetTop, // scrolls to location of ref
       behavior: 'smooth',
     });
     toggleNav();
@@ -55,9 +32,6 @@ function Nav({ ratingsRef, qaRef, pdRef, riRef }) {
       </NavTop>
       <NavBot showNav={showNav} id="nav-bot" ref={navBotRef}>
         <Name onClick={scrollToPd}>PRODUCT</Name>
-        <Name onClick={scrollToRi}>RELATED ITEMS</Name>
-        <Name onClick={scrollToQa}>Q + A</Name>
-        <Name onClick={scrollDown}>RATINGS REVIEWS</Name>
       </NavBot>
       {(showNav) && <NavBotBack onClick={handleOffClick} />}
     </NavMain>

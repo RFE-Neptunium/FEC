@@ -26,6 +26,7 @@ app.get('/products', (req, res) => {
 });
 
 app.get('/products/:product_id', (req, res) => {
+  // console.log(products);
   if (products[req.params.product_id]) {
     res.status(200).send(products[req.params.product_id]);
   } else {
@@ -42,6 +43,7 @@ app.get('/products/:product_id', (req, res) => {
 });
 
 app.get('/products/:product_id/styles', (req, res) => {
+  // console.log(styles);
   if (styles[req.params.product_id]) {
     res.status(200).send(styles[req.params.product_id]);
   } else {
