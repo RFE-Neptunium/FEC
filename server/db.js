@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable camelcase */
 const mongoose = require('mongoose');
-
+require('dotenv').config();
 // mongoose.set('debug', true);
 
 const { Schema } = mongoose;
@@ -9,7 +9,7 @@ const { Schema } = mongoose;
 mongoose
   .disconnect()
   .then(mongoose
-    .connect('mongodb://localhost:27017/Products')
+    .connect(`mongodb://${process.env.url}:27017/Products`)
     .then(console.log('Connected to MongoDB...'))
     .catch((err) => console.log(err)),
   )

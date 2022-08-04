@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const compression = require('compression');
-// require('dotenv').config();
+
 const port = 3000;
 const db = require('./db');
 let { product } = require('./cache/products');
