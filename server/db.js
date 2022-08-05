@@ -10,7 +10,7 @@ console.log(process.env.URL);
 mongoose
   .disconnect()
   .then(mongoose
-    .connect(`mongodb://54.175.129.130:27017/Product`)
+    .connect(`mongodb://${process.env.URL}:27017/Product`)
     .then(console.log('Connected to MongoDB...'))
     .catch((err) => console.log(err)),
   )
