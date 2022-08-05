@@ -5,11 +5,12 @@ require('dotenv').config();
 // mongoose.set('debug', true);
 
 const { Schema } = mongoose;
+console.log(process.env.URL);
 
 mongoose
   .disconnect()
   .then(mongoose
-    .connect(`mongodb://${process.env.url}:27017/Products`)
+    .connect(`mongodb://54.175.129.130:27017/Product`)
     .then(console.log('Connected to MongoDB...'))
     .catch((err) => console.log(err)),
   )
@@ -68,7 +69,7 @@ const Skus = mongoose.model('Skus', SkusSchema);
 const Styles = mongoose.model('Styles', StylesSchema);
 
 const getItems = (callback) => {
-  Product.find().limit(100)
+  Product.find().limit(10)
     .then((results) => {
       callback(null, results);
     })
