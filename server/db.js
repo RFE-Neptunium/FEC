@@ -13,15 +13,6 @@ mongoose
     .catch((err) => console.log(err)))
   .catch((err) => console.log(err));
 
-const ProductSchema = new Schema({
-  id: Number,
-  name: String,
-  slogan: String,
-  description: String,
-  category: String,
-  default_price: String,
-});
-
 const RelatedProductsSchema = new Schema({
   id: Number,
   current_product_id: Number,
@@ -56,21 +47,22 @@ const StylesListSchema = new Schema({
     size: String,
     quantity: Number,
   }],
-  photos: [{
-    id: Number,
-    styleId: Number,
-    url: String,
-    thumbnail_url: String,
-  }],
 });
 
-const Product = mongoose.model('Product', ProductSchema, 'product');
+const PhotosSchema = new Schema({
+  id: Number,
+  styleId: Number,
+  url: String,
+  thumbnail_url: String,
+});
+
 const RelatedProducts = mongoose.model('RelatedProducts', RelatedProductsSchema);
 const Products = mongoose.model('Products', ProductsSchema, 'products');
 const StylesList = mongoose.model('StylesList', StylesListSchema, 'styleslist');
+const Photos = mongoose.model('Photos', PhotosSchema);
 
 const getItems = (callback) => {
-  Product.find().collation({ locale: 'id' }).limit(100)
+  Products.find().collation({ locale: 'id' }).limit(100)
     .then((results) => {
       callback(null, results);
     })
@@ -89,24 +81,49 @@ const getItemByProductId = (product_id, callback) => {
 const getStylesByProductId = (productId, callback) => {
   StylesList
     .find({ productId })
-    .then((data) => {
-      callback(null, data);
-    })
-    .catch((err) => callback(err));
-};
+    .then((styles) => {
+      const ids = [];
+      styles.forEach((style) => {
+        ids.push(style.id);
+      });
 
-const getRelatedItemsByProductId = (current_product_id, callback) => {
-  RelatedProducts
-    .find({ current_product_id })
-    .then((data) => {
-      callback(null, data);
-    })
-    .catch((err) => callback(err));
-};
+      Photos
+        .find({ styleId: { $in: ids } })
+        .then((photos) => {
+          const styleArr = [];
+          styles.forEach((style) => {
+            const styleObj = {
+              id: style.id,
+              name: style.name,
+              sale_price: style.sale_price,
+              original_price: style.original_price,
+              skus: style.skus,
+              photos: [],
+            };
+            photos.forEach((photo) => {
+              if (photo.styleId === styleObj.id) {
+                styleObj.photos.push({ url: photo.url, thumbnail_url: photo.thumbnail_url });
+              }
+            });
+            styleArr.push(styleObj);
+          })
+          callback(null, styleArr);
+        })
+        .catch((err) => callback(err));
+    };
 
-module.exports = {
-  getItems,
-  getItemByProductId,
-  getStylesByProductId,
-  getRelatedItemsByProductId,
-};
+  const getRelatedItemsByProductId = (current_product_id, callback) => {
+    RelatedProducts
+      .find({ current_product_id })
+      .then((data) => {
+        callback(null, data);
+      })
+      .catch((err) => callback(err));
+  };
+
+  module.exports = {
+    getItems,
+    getItemByProductId,
+    getStylesByProductId,
+    getRelatedItemsByProductId,
+  };
