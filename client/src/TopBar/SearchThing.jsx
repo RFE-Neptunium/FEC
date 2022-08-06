@@ -12,11 +12,11 @@ function SearchThing({ toggleSearch, handleNewProductClick }) {
   const [isPending, startTransition] = useTransition();
 
   const getProducts = () => {
-    axios.get('http://localhost:3000/products', {
+    axios.get('http://localhost:3000/products') /*, {
       /* headers: {
         Authorization: process.env.AUTH_KEY,
       }, */
-    })
+    // })
       .then((response) => {
         setProducts(response.data);
       })

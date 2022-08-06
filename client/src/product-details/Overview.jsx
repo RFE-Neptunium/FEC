@@ -30,17 +30,11 @@ const Overview = function({props, url, productId}) {
   const requestConfig1 = {
     method: 'GET',
     url: productUrl,
-    /* headers: {
-      Authorization: process.env.AUTH_KEY,
-    }, */
   };
 
   const requestConfig2 = {
     method: 'GET',
     url: productStylesUrl,
-    /* headers: {
-      Authorization: process.env.AUTH_KEY,
-    }, */
   };
 
   function getProduct() {

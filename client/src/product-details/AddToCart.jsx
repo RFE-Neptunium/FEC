@@ -62,34 +62,9 @@ function AddToCart({
   const handleSubmit = (event) => {
     event.preventDefault();
     if (currentSize === '') {
-      setSizeAlert('Please select size');
+      setSizeAlert('Please Select Size');
     } else {
-      const skuKeys = Object.keys(currentStyle.skus);
-      let skuId;
-      skuKeys.forEach((key) => {
-        if (currentStyle.skus[key].size === currentSize) {
-          skuId = key;
-        }
-      });
-      skuId = parseInt(skuId);
-
-      const cartConfig = {
-        method: 'POST',
-        url: `${process.env.API_URL}/cart`,
-        data: { sku_id: skuId },
-        headers: {
-          Authorization: process.env.AUTH_KEY,
-        },
-      };
-
-      const queries = [];
-      for (let i = 0; i < currentAmount; i += 1) {
-        queries.push(axios(cartConfig)
-          .catch((err) => console.log(err)));
-      }
-      Promise.all(queries).then(() => {
-        setSizeAlert('');
-      });
+      console.log('Added to Cart!');
     }
   };
 

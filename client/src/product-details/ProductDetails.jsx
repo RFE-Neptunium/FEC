@@ -4,7 +4,7 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable radix */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React from 'react';
 import { FacebookShareButton, FacebookIcon, PinterestShareButton, PinterestIcon, TwitterShareButton, TwitterIcon } from 'react-share';
 
 function ProductDetails({ product, currentStyle }) {

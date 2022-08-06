@@ -8,7 +8,6 @@
 /* eslint-disable max-len */
 import React from 'react';
 import Modal from './Modal';
-// import styled from 'styled-components';
 
 function ImageGallery({
   currentStyle, currentThumbnail, setCurrentThumbnail, modal, setModal, zoom, setZoom, modalZoom, setModalZoom, range, setRange,
