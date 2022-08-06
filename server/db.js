@@ -8,7 +8,7 @@ const { Schema } = mongoose;
 mongoose
   .disconnect()
   .then(mongoose
-    .connect(`mongodb://${process.env.URL}:27017/Products`)
+    .connect(`mongodb://${process.env.URL}:27017/Product`)
     .then(console.log('Connected to MongoDB...'))
     .catch((err) => console.log(err)))
   .catch((err) => console.log(err));
@@ -106,24 +106,25 @@ const getStylesByProductId = (productId, callback) => {
               }
             });
             styleArr.push(styleObj);
-          })
+          });
           callback(null, styleArr);
         })
         .catch((err) => callback(err));
-    };
+    });
+};
 
-  const getRelatedItemsByProductId = (current_product_id, callback) => {
-    RelatedProducts
-      .find({ current_product_id })
-      .then((data) => {
-        callback(null, data);
-      })
-      .catch((err) => callback(err));
-  };
+const getRelatedItemsByProductId = (current_product_id, callback) => {
+  RelatedProducts
+    .find({ current_product_id })
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((err) => callback(err));
+};
 
-  module.exports = {
-    getItems,
-    getItemByProductId,
-    getStylesByProductId,
-    getRelatedItemsByProductId,
-  };
+module.exports = {
+  getItems,
+  getItemByProductId,
+  getStylesByProductId,
+  getRelatedItemsByProductId,
+};
